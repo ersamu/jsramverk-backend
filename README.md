@@ -10,5 +10,7 @@ Skriv i terminalen: npm start
 / - en startsida som ger dig instruktioner om hur du kan använda API
 
 /documents GET visar dig alla dokument som har ett automatgenererat ID, en titel och innehåll.
+
 /documents POST skapar ett nytt dokument som har en titel, innehåll och får ett automatgenererat ID.
+
 /documents PUT uppdaterar ett dokument som har en titel, innehåll och automatgenererat ID.
