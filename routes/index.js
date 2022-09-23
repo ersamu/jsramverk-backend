@@ -17,7 +17,7 @@ router.get("/documents",
     async (req, res) => {
         const documents = await documentsModel.getAllDocuments();
 
-        res.json({ data: documents});
+        return res.json({ data: documents});
     }
 );
 
@@ -25,9 +25,19 @@ router.post("/documents",
     async (req, res) => {
         const newDocument = req.body;
 
-        const result = await documentsModel.insertDocument(newDocument);
+        // const result = await documentsModel.insertDocument(newDocument);
 
-        res.json(result);
+        // res.json(result);
+
+        if (newDocument.title && newDocument.content) {
+            const result = await documentsModel.insertDocument(newDocument);
+
+            return res.status(201).json({ data: result });
+        } else {
+            return res.status(400).json({ errors: {
+                message: "Title and content needed to create document."
+            }});
+        }
     }
 );
 
