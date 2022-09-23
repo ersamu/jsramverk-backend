@@ -53,7 +53,7 @@ describe('documents', () => {
         it('201 Creating new document', (done) => {
             let document = {
                 title: "Doc1",
-                content: "BTH has good educations!"
+                content: "BTH has good educations!!"
             };
 
             chai.request(server)
