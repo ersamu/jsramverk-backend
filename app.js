@@ -6,8 +6,10 @@ const morgan = require('morgan');
 const cors = require('cors');
 
 const allRoutes = require('./routes/index');
+const docsModel = require('./models/documents');
 
 const app = express();
+const httpServer = require("http").createServer(app);
 
 const port = process.env.PORT || 1337;
 
@@ -52,7 +54,34 @@ app.use((err, req, res, next) => {
     });
 });
 
-const server = app.listen(port, () => {
+const io = require("socket.io")(httpServer, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
+
+io.sockets.on('connection', function(socket) {
+    console.log(socket.id); // Nått lång och slumpat
+
+    socket.on('create', function(room) {
+        console.log("Skapar rum");
+        socket.join(room);
+    });
+
+    socket.on('update', (data) => {
+        console.log("Uppdaterar");
+        socket.to(data["_id"]).emit("update", data);
+        docsModel.updateDocument(data);
+    });
+
+    socket.on('leave', function(room) {
+        console.log("Lämnar rum");
+        socket.leave(room);
+    });
+});
+
+const server = httpServer.listen(port, () => {
     console.log('Api listening on port ' + port);
 });
 
