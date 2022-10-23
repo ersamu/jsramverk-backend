@@ -2,15 +2,15 @@ const database = require("../db/database.js");
 let ObjectId = require('mongodb').ObjectId;
 
 const documents = {
-    getAllDocuments: async function getAllDocuments() {
+    getDocuments: async function getDocuments(user) {
         let db;
 
         try {
             db = await database.getDb();
 
-            const allDocuments = await db.collection.find().toArray();
+            const documents = await db.collection.find({allowed_users: user}).toArray();
 
-            return allDocuments;
+            return documents;
         } catch (error) {
             return {
                 errors: {
@@ -49,6 +49,8 @@ const documents = {
             const updateDocument = {
                 title: docToUpdate.title,
                 content: docToUpdate.content,
+                owner: docToUpdate.owner,
+                allowed_users: docToUpdate.allowed_users
             };
 
             const result = await db.collection.updateOne(

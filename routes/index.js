@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const documentsModel = require("../models/documents");
+const usersModel = require("../models/users");
 
 router.get("/", (req, res) => {
     const data = {
@@ -13,9 +14,10 @@ router.get("/", (req, res) => {
     res.json(data);
 });
 
-router.get("/documents",
+router.get("/documents/:userId",
+    (req, res, next) => usersModel.checkToken(req, res, next),
     async (req, res) => {
-        const documents = await documentsModel.getAllDocuments();
+        const documents = await documentsModel.getDocuments(req.params.userId);
 
         return res.json({ data: documents});
     }
