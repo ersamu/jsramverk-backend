@@ -1,12 +1,14 @@
 require('dotenv').config();
 
-const express = require('express');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
-const cors = require('cors');
+const express = require("express");
+const bodyParser = require("body-parser");
+const morgan = require("morgan");
+const cors = require("cors");
 
-const allRoutes = require('./routes/index');
-const docsModel = require('./models/documents');
+const documentRoutes = require("./routes/index");
+const authRoutes = require("./routes/auth");
+
+const docsModel = require("./models/documents");
 
 const app = express();
 const httpServer = require("http").createServer(app);
@@ -27,7 +29,8 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/', allRoutes);
+app.use('/', documentRoutes);
+app.use("/auth", authRoutes);
 
 // Add routes for 404 and error handling
 // Catch 404 and forward to error handler
