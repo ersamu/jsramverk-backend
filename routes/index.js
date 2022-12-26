@@ -3,6 +3,7 @@ const router = express.Router();
 
 const documentsModel = require("../models/documents");
 const usersModel = require("../models/users");
+const emailModel = require("../models/email");
 
 router.get("/", (req, res) => {
     const data = {
@@ -14,10 +15,10 @@ router.get("/", (req, res) => {
     res.json(data);
 });
 
-router.get("/documents/:userId",
+router.get("/documents/:userEmail",
     (req, res, next) => usersModel.checkToken(req, res, next),
     async (req, res) => {
-        const documents = await documentsModel.getDocuments(req.params.userId);
+        const documents = await documentsModel.getDocuments(req.params.userEmail);
 
         return res.json({ data: documents});
     }
@@ -26,10 +27,6 @@ router.get("/documents/:userId",
 router.post("/documents",
     async (req, res) => {
         const newDocument = req.body;
-
-        // const result = await documentsModel.insertDocument(newDocument);
-
-        // res.json(result);
 
         if (newDocument.title && newDocument.content) {
             const result = await documentsModel.insertDocument(newDocument);
@@ -50,6 +47,14 @@ router.put("/documents",
         const result = await documentsModel.updateDocument(updateDocument);
 
         res.json(result);
+    }
+);
+
+router.post("/email",
+    async (req, res) => {
+        const newEmail = req.body;
+
+        await emailModel.sendEmail(res, newEmail);
     }
 );
 
